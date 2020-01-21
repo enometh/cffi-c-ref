@@ -1,0 +1,38 @@
+;;; -*- Mode: LISP; Package: :cl-user; BASE: 10; Syntax: ANSI-Common-Lisp; -*-
+;;;
+;;;   Time-stamp: <>
+;;;   Touched: Tue Jan 21 17:13:29 2020 +0530 <enometh@net.meer>
+;;;   Bugs-To: enometh@net.meer
+;;;   Status: Experimental.  Do not redistribute
+;;;   Copyright (C) 2020 Madhu.  All Rights Reserved.
+;;;
+;;;  https://github.com/borodust/cffi-c-ref
+;;;
+(in-package "CL-USER")
+
+(defvar *cffi-c-ref-source-dir*
+  (merge-pathnames "cffi-c-ref/" (translate-logical-pathname "EXTERN:")))
+(defvar *cffi-c-ref-binary-dir* (binary-directory *cffi-c-ref-source-dir*))
+
+(mk:defsystem :cffi-c-ref
+  :source-pathname *cffi-c-ref-source-dir*
+  :binary-pathname *cffi-c-ref-binary-dir*
+  :source-extension "lisp"
+  :depends-on (:alexandria :cffi)
+  :components ((:file "cffi-c-ref")))
+
+#+nil
+(mk:oos :cffi-c-ref :load :compile-during-load t)
+
+(mk:defsystem :cffi-c-ref/tests
+  :source-pathname *cffi-c-ref-source-dir*
+  :binary-pathname *cffi-c-ref-binary-dir*
+  :source-extension "lisp"
+  :depends-on (:alexandria :cffi-c-ref :fiveam)
+  :components ((:file "cffi-c-ref-tests")))
+
+#+nil
+(mk:oos :cffi-c-ref/tests :load :compile-during-load t)
+
+#+nil
+(5am:run  :cffi-c-ref.tests)
