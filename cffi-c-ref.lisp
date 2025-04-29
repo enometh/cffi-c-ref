@@ -197,7 +197,11 @@
                      (push `(,var (&rest ,accessors)
                                   `(c-ref ,',ptr ,',type ,@,accessors))
                            macrolets)
-                     (push `(,var (c-ref ,ptr ,type))
+                     (push `(,var (c-ref ,ptr ,type
+				    #+nil ;;madhu 250501 -- uncomment for cffi bug compatibility - i.e. translate typedefs to pointers and structs to plists.
+				    ,@(and (typep (cffi::parse-type type)
+						  'cffi::enhanced-typedef)
+					   '(&))))
                            symbol-macrolets)))
               finally (return (values macrolets
                                       symbol-macrolets
